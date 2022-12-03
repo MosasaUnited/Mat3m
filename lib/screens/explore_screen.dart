@@ -2,12 +2,41 @@ import 'package:flutter/material.dart';
 import '../components/components.dart';
 import '../models/models.dart';
 import '../api/mock_fooderlich_service.dart';
-class ExploreScreen extends StatelessWidget {
-// 1
-  final mockService = MockFooderlichService();
+class ExploreScreen extends StatefulWidget {
+
 
   ExploreScreen({Key? key}) : super(key: key);
 
+  @override
+  State<ExploreScreen> createState() => _ExploreScreenState();
+}
+
+class _ExploreScreenState extends State<ExploreScreen> {
+  final controller = ScrollController();
+// 1
+  final mockService = MockFooderlichService();
+
+  
+  @override
+  void initState(){
+    super.initState();
+    controller.addListener(listenScrolling);
+  }
+  void listenScrolling()
+  {
+    if(controller.position.atEdge)
+    {
+      final isTop = controller.position.pixels == 0;
+
+      if(isTop)
+      {
+        print('i am at the top!');
+      }else
+      {
+        print('i am at the bottom!');
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
 // 1
@@ -20,7 +49,7 @@ class ExploreScreen extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
 // 5
           return ListView(
-            physics: BouncingScrollPhysics(),
+            controller: controller,
 // 6
             scrollDirection: Axis.vertical,
             children: [
